@@ -18,6 +18,8 @@ fps = 10
 class GameOfLife:
     def __init__(self):
         self.board = [int(7 * random.getrandbits(1)) for _ in xrange(size)]
+        self.old_board = [False] * size
+        self.older_board = [False] * size
         self.color = [[154, 154, 174], [0, 0, 255], [0, 0, 200], [0, 0, 160], [0, 0, 140], [0, 0, 90], [0, 0, 60], [0, 0, 0]]
 
     def value(self, x, y):
@@ -52,7 +54,10 @@ class GameOfLife:
                         new_board[i * height + j] = 0
                     else:
                         new_board[i * height + j] = min(7, lvl + 1)
+        self.older_board = self.old_board
+        self.old_board = self.board
         self.board = new_board
+
 
     def all_dead(self):
         for i in xrange(size):
@@ -104,16 +109,35 @@ screen.blit(background, (0,0))
 pygame.display.flip()
 
 try:
-    while not life.all_dead():
-        life.next_generation()
-        life.show_board()
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            life = GameOfLife()
-        elif keys[pygame.K_ESCAPE]:
-            pygame.quit()
-        pygame.event.pump()
-        clock.tick(fps)
+    while True:
+        life = GameOfLife()
+        wait = 100
+        fade = wait
+        timestamp = 0
+        timestamp_old = 0
+        restart_secs= 600
+        while not (life.all_dead() or (timestamp < timestamp_old)):
+            timestamp_old = timestamp
+            timestamp = time.monotonic() % restart_secs
+            if (life.old_board == life.board):
+                fade -= 4
+            if (life.older_board == life.board):
+                fade -= 2
+                time.sleep(0.04)
+            if (fade < 0):
+                break
+            life.next_generation()
+            life.show_board()
+        
+#            life.color -= 5
+            #unicornhathd.brightness(start_brightness / wait * fade)
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                life = GameOfLife()
+            elif keys[pygame.K_ESCAPE]:
+                pygame.quit()
+            pygame.event.pump()
+            clock.tick(fps)
 
 except KeyboardInterrupt:
     pygame.quit()
