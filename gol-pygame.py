@@ -85,7 +85,7 @@ cell_width=math.floor(canvas_width / width)
 cell_height=math.floor(canvas_height / height)
 cell_pad = 2
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((canvas_width, canvas_height), pygame.NOFRAME | pygame.FULLSCREEN)
+screen = pygame.display.set_mode((canvas_width, canvas_height), pygame.NOFRAME | pygame.FULLSCREEN | pygame.SCALED)
 # , pygame.SCALED
 pygame.display.set_caption("No Man's Sky")
 pygame.mouse.set_visible(True)
