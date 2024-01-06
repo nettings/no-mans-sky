@@ -15,7 +15,7 @@ except NameError:
 width = 48
 height = 27
 size = width * height
-fps = 0.3
+fps = 5
     
 class GameOfLife:
     def __init__(self):
@@ -110,9 +110,8 @@ cell_height=math.floor(canvas_height / height)
 cell_pad = 2
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((canvas_width, canvas_height), pygame.NOFRAME | pygame.FULLSCREEN | pygame.SCALED)
-# , pygame.SCALED
 pygame.display.set_caption("No Man's Sky")
-pygame.mouse.set_visible(True)
+pygame.mouse.set_visible(False)
 
 background = pygame.Surface(screen.get_size())
 background = background.convert()
@@ -166,8 +165,6 @@ try:
                         life.show_board()
             pygame.event.pump()
             clock.tick(fps)
-            fps += .1
-
     
 
 except KeyboardInterrupt:

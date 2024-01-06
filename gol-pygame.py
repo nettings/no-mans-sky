@@ -93,7 +93,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((canvas_width, canvas_height), pygame.NOFRAME | pygame.FULLSCREEN | pygame.SCALED)
 # , pygame.SCALED
 pygame.display.set_caption("No Man's Sky")
-pygame.mouse.set_visible(True)
+pygame.mouse.set_visible(False)
 
 background = pygame.Surface(screen.get_size())
 background = background.convert()
