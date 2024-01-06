@@ -15,7 +15,7 @@ except NameError:
 width = 48
 height = 27
 size = width * height
-fps = 10
+fps = 0.3
     
 class GameOfLife:
     def __init__(self):
@@ -31,6 +31,10 @@ class GameOfLife:
 #        self.color = [[255, 0, 30], [255, 160, 33], [179, 113, 23], [130, 81, 17], [102, 64, 13], [51, 32, 7], [25, 16, 3], [0, 0, 0]]
         self.color = [[255, 0, 30], [130, 81, 17], [102, 64, 13], [51, 32, 7], [25, 16, 3], [12, 9, 2], [6, 4, 1], [0, 0, 0]]
 
+    def one_bit_noise(self):
+        cell = random.randint(0, size)
+        self.board[cell] = 7 - self.board[cell]
+        
     def value(self, x, y):
         index = ((x % width) * height) + (y % height)
         return self.board[index]
@@ -125,14 +129,16 @@ pygame.display.flip()
 
 try:
     while True:
-        life = GameOfLife()
-        life.show_board()
-        pygame.time.wait(4000)        
         wait = 100
         fade = wait
         timestamp = 0
         timestamp_old = 0
         restart_secs= 600
+        life = GameOfLife()
+        life.one_bit_noise()
+        life.show_board()
+        pygame.time.wait(4000)        
+        clock.tick(fps)
         while not (life.all_dead() or (timestamp < timestamp_old)):
             timestamp_old = timestamp
             timestamp = time.monotonic() % restart_secs
@@ -145,16 +151,25 @@ try:
                 break
             life.next_generation()
             life.show_board()
-        
-#            life.color -= 5
-            #unicornhathd.brightness(start_brightness / wait * fade)
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE]:
-                life = GameOfLife()
-            elif keys[pygame.K_ESCAPE]:
-                pygame.quit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.display.quit()
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.display.quit()
+                        pygame.quit()
+                        quit()
+                    if event.key == pygame.K_SPACE:
+                        life=GameOfLife()
+                        life.show_board()
             pygame.event.pump()
             clock.tick(fps)
+            fps += .1
+
+    
 
 except KeyboardInterrupt:
     pygame.quit()
+    quit()
