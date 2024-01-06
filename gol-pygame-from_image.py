@@ -15,7 +15,7 @@ except NameError:
 width = 48
 height = 27
 size = width * height
-fps = 5
+fps = 3
     
 class GameOfLife:
     def __init__(self):
@@ -32,8 +32,12 @@ class GameOfLife:
         self.color = [[255, 0, 30], [130, 81, 17], [102, 64, 13], [51, 32, 7], [25, 16, 3], [12, 9, 2], [6, 4, 1], [0, 0, 0]]
 
     def one_bit_noise(self):
-        cell = random.randint(0, size)
-        self.board[cell] = 7 - self.board[cell]
+        cell = -1
+        while (True):
+            cell = random.randint(0, size);
+            if (self.board[cell] == 0):
+                break
+        self.board[cell] = 7
         
     def value(self, x, y):
         index = ((x % width) * height) + (y % height)
@@ -136,7 +140,7 @@ try:
         life = GameOfLife()
         life.one_bit_noise()
         life.show_board()
-        pygame.time.wait(4000)        
+        pygame.time.wait(10000)        
         clock.tick(fps)
         while not (life.all_dead() or (timestamp < timestamp_old)):
             timestamp_old = timestamp
