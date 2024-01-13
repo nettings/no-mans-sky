@@ -15,7 +15,7 @@ except NameError:
 width = 48
 height = 27
 size = width * height
-fps = 3
+fps = 0.1
     
 class GameOfLife:
     def __init__(self):
@@ -140,11 +140,11 @@ try:
         life = GameOfLife()
         life.one_bit_noise()
         life.show_board()
-        pygame.time.wait(10000)        
+        pygame.time.wait(45000)        
         clock.tick(fps)
-        while not (life.all_dead() or (timestamp < timestamp_old)):
-            timestamp_old = timestamp
-            timestamp = time.monotonic() % restart_secs
+        while not (life.all_dead()): # or (timestamp < timestamp_old)):
+            #timestamp_old = timestamp
+            #timestamp = time.monotonic() % restart_secs
             if (life.old_board == life.board):
                 fade -= 4
             if (life.older_board == life.board):
@@ -168,8 +168,9 @@ try:
                         life=GameOfLife()
                         life.show_board()
             pygame.event.pump()
+            fps+=.02
             clock.tick(fps)
-    
+        break    
 
 except KeyboardInterrupt:
     pygame.quit()
